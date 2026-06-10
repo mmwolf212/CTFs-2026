@@ -2,7 +2,7 @@
 
 ## Overview
 
-This challenge presents us with a classic RSA setup, but with a glaring vulnerability: the same plaintext message has been encrypted twice using two different public exponents under the same modulus. This is vulnerable to what is known as a Common Modulus Attack.
+This challenge presents us with a realatively straightforward RSA setup, but with a glaring vulnerability: the same plaintext message has been encrypted twice using two different public exponents under the same modulus. This is vulnerable to what is known as a Common Modulus Attack.
 
 ## Understanding the Challenge
 

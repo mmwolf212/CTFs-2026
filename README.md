@@ -5,3 +5,4 @@ A collection of my writeups from CTFs in which I competed in 2026.
 
 - Cryptonite  2026
 - DawgCTF
+- GPN CTF 2026

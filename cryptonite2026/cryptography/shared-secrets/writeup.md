@@ -1,8 +1,8 @@
-# Shared Secrets -- Writeup
+# Shared Secrets: Writeup
 
 ## Overview
 
-This challenge presents us with a classic RSA setup, but with a glaring vulnerability: the same plaintext message has been encrypted twice using two different public exponents under the same modulus. This is vulnerable to what is known as a **Common Modulus Attack**.
+This challenge presents us with a classic RSA setup, but with a glaring vulnerability: the same plaintext message has been encrypted twice using two different public exponents under the same modulus. This is vulnerable to what is known as a Common Modulus Attack.
 
 ## Understanding the Challenge
 
@@ -32,15 +32,15 @@ Here, the same message `m` is encrypted twice with two different exponents (`e1 
 
 ## The Vulnerability: Common Modulus Attack
 
-The key insight is that `e1` and `e2` are **coprime**, meaning their greatest common divisor (gcd) is 1. You can verify this yourself: 65537 and 65539 share no common factors other than 1.
+The key insight is that `e1` and `e2` are coprime, meaning their greatest common divisor (gcd) is 1. You can verify this yourself: 65537 and 65539 share no common factors other than 1.
 
-When two numbers are coprime, a result from number theory called **Bezout's Identity** guarantees that there exist integers `s1` and `s2` such that:
+When two numbers are coprime, a result from number theory called Bezout's Identity guarantees that there exist integers `s1` and `s2` such that:
 
 ```
 e1 * s1 + e2 * s2 = 1
 ```
 
-We can find these integers using the **Extended Euclidean Algorithm**, which is a standard algorithm taught in most introductory number theory or cryptography courses. It extends the basic Euclidean Algorithm (which finds the gcd of two numbers) to also produce the coefficients `s1` and `s2`.
+We can find these integers using the Extended Euclidean Algorithm, which is a standard algorithm taught in most introductory number theory or cryptography courses. It extends the basic Euclidean Algorithm (which finds the gcd of two numbers) to also produce the coefficients `s1` and `s2`.
 
 ## Why This Lets Us Recover the Message
 
@@ -65,7 +65,7 @@ c1^s1 * c2^s2 = (m^e1)^s1 * (m^e2)^s2
 
 The message falls right out. No factoring required.
 
-One small detail: one of `s1` or `s2` will be negative. Raising a number to a negative exponent modulo `n` means we need to compute the **modular inverse** of that ciphertext first. In Python 3.8 and later, this is as simple as calling `pow(c, -1, n)`.
+One small detail: one of `s1` or `s2` will be negative. Raising a number to a negative exponent modulo `n` means we need to compute the modular inverse of that ciphertext first. In Python 3.8 and later, this is as simple as calling `pow(c, -1, n)`.
 
 ## Solve Script
 

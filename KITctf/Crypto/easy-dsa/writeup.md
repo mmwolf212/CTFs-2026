@@ -5,7 +5,7 @@
 
 ## Description
 
-We connect to a Mongolian barbecue-themed ECDSA signing oracle running on the P-521 curve. The server lets us sign arbitrary "recipes," retrieve the public key, and claim the flag — but only if we present a valid signature on a message we haven't previously asked the server to sign. In other words, we need to forge a signature.
+We connect to a Mongolian barbecue-themed ECDSA signing oracle running on the P-521 curve. The server lets us sign arbitrary "recipes," retrieve the public key, and claim the flag, but only if we present a valid signature on a message we haven't previously asked the server to sign. In other words, we need to forge a signature.
 
 ## Step 1: Gathering Data
 
@@ -25,7 +25,7 @@ s1: 0x1750400df6c09c4c...
 s2: 0x406a4a20a9f6e917...
 ```
 
-Two signatures and the public key — that's all we need. Now we look for what's broken in the signing implementation.
+Two signatures and the public key. That's all we need. Now we look for what's broken in the signing implementation.
 
 ## Step 2: Identifying the Vulnerability — Small Nonces
 
@@ -42,7 +42,7 @@ def secure_random(sk: ECC.EccKey, message: bytes) -> int:
     return int.from_bytes(random_generator.digest()) % (int(sk._curve.order) - 1) + 1
 ```
 
-The nonce is derived from `sha256(key_id || msg_id)`, which produces a **256-bit** output. After reduction modulo `n` (~2^521), the nonce `k` is at most 256 bits — less than half the size it should be. This is the classic **hidden number problem**: when nonces are biased (i.e., their upper bits are known to be zero), the private key can be recovered using lattice techniques.
+The nonce is derived from `sha256(key_id || msg_id)`, which produces a **256-bit** output. After reduction modulo `n` (~2^521), the nonce `k` is at most 256 bits, less than half the size it should be. This is the classic hidden number problem: when nonces are biased (i.e., their upper bits are known to be zero), the private key can be recovered using lattice techniques.
 
 ## Step 3: Lattice Attack to Recover the Private Key
 
